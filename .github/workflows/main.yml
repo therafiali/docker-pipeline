@@ -27,7 +27,7 @@ jobs:
           
           # Clone if doesn't exist
           if [ ! -d "/home/ubuntu/vite-react-app" ]; then
-            git clone https://github.com/<your-username>/<your-repo>.git /home/ubuntu/vite-react-app
+            git clone https://github.com/therafiali/docker-pipeline.git /home/ubuntu/vite-react-app
           fi
 
           cd /home/ubuntu/vite-react-app
