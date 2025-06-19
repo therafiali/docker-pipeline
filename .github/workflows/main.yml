@@ -24,8 +24,7 @@ jobs:
       run: |
         ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           set -e
-          
-          # Clone if doesn't exist
+
           if [ ! -d "/home/ubuntu/vite-react-app" ]; then
             git clone https://github.com/therafiali/docker-pipeline.git /home/ubuntu/vite-react-app
           fi
@@ -35,6 +34,6 @@ jobs:
 
           docker stop vite-react || true
           docker rm vite-react || true
-          docker build -t vite-react .
+          docker build -t vite-react .       # ✅ Build from root
           docker run -d -p 3001:3001 --name vite-react vite-react
         EOF
