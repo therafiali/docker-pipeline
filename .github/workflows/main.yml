@@ -35,5 +35,5 @@ jobs:
           docker stop vite-react || true
           docker rm vite-react || true
           docker build -t vite-react .       # ✅ Build from root
-          docker run -d -p 5173:3001 --name vite-react vite-react
+          docker run -d -p 3001:3001 --name vite-react vite-react
         EOF

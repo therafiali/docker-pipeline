@@ -1,18 +1,14 @@
-# Dockerfile for Vite React App
 FROM node:18-alpine
 
-# Set working directory
+# Create app directory
 WORKDIR /app
 
-# Copy and install dependencies
+# Copy files
 COPY package*.json ./
 RUN npm install
-
-# Copy app files
 COPY . .
 
-# Expose port (Vite dev or use static serve for prod)
-EXPOSE 5173
-
-# Run the dev server on 0.0.0.0 so it's externally accessible
+# Expose port and run dev server
+EXPOSE 3001
 CMD ["npm", "run", "dev", "--", "--host"]
+
