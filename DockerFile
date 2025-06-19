@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Expose port (Vite dev or use static serve for prod)
-EXPOSE 3001
+EXPOSE 5173
 
 # Run the dev server on 0.0.0.0 so it's externally accessible
 CMD ["npm", "run", "dev", "--", "--host"]
