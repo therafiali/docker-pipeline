@@ -1,9 +1,9 @@
-name: Deploy to EC2 with Docker
+name: Deploy React App to EC2 via Docker
 
 on:
   push:
     branches:
-      - main  # or your branch
+      - main
 
 jobs:
   deploy:
@@ -13,26 +13,28 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up SSH
+    - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Deploy app to EC2
+    - name: Deploy to EC2
       run: |
         ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          # Navigate to app directory or clone it if not present
-          if [ ! -d ~/my-app ]; then
-            git clone https://github.com/therafiali/docker-pipeline.git ~/my-app
+          set -e
+          
+          # Clone if doesn't exist
+          if [ ! -d "/home/ubuntu/vite-react-app" ]; then
+            git clone https://github.com/<your-username>/<your-repo>.git /home/ubuntu/vite-react-app
           fi
-          sudo su
-          cd ~/my-app
+
+          cd /home/ubuntu/vite-react-app
           git pull origin main
 
-          # Rebuild and run the container
-          docker stop app || true && docker rm app || true
-          docker build -t app .
-          docker run -d -p 3000:3000 --name app app
+          docker stop vite-react || true
+          docker rm vite-react || true
+          docker build -t vite-react .
+          docker run -d -p 3001:3001 --name vite-react vite-react
         EOF
