@@ -1,0 +1,37 @@
+name: Deploy to EC2 with Docker
+
+on:
+  push:
+    branches:
+      - main  # or your branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy app to EC2
+      run: |
+        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          # Navigate to app directory or clone it if not present
+          if [ ! -d ~/my-app ]; then
+            git clone https://github.com/therafiali/docker-pipeline.git ~/my-app
+          fi
+          cd ~/my-app
+          git pull origin main
+
+          # Rebuild and run the container
+          docker stop app || true && docker rm app || true
+          docker build -t app .
+          docker run -d -p 3000:3000 --name app app
+        EOF
