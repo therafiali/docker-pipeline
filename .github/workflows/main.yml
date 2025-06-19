@@ -27,6 +27,7 @@ jobs:
           if [ ! -d ~/my-app ]; then
             git clone https://github.com/therafiali/docker-pipeline.git ~/my-app
           fi
+          sudo su
           cd ~/my-app
           git pull origin main
 
